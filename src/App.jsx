@@ -1,10 +1,8 @@
+import { IndexRoute } from './routes/indexRoute'
 
 function App () {
-    const name = 'Roy'
     return (
-        <div>
-            <h2>{ name }</h2>
-        </div>
+        <IndexRoute />
     )
 }
 

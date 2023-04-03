@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .inputText {
+        @apply placeholder:italic text-purple-900 text-lg lg:text-xl placeholder:text-purple-300 block bg-white w-full border border-purple-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-purple-500 focus:ring-purple-500 focus:ring-1 sm:text-sm;
+    }
+}
