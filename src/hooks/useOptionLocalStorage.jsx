@@ -10,15 +10,13 @@ export const useOptionLocalStorage = ({ key = '', defaultData = null }) => {
             setvalue(newValue)
             return { ok: true }
         } else {
-            console.log(data)
-            console.log(newItem)
-            const flag = data.find(ele => ele.username === newItem.username)
+            const flag = data.find(ele => ele.username.trim().toUpperCase() === newItem.username.trim().toUpperCase())
             if (!flag) {
                 newValue = [...data, newValue]
                 setvalue(newValue)
                 return { ok: true }
             }
-            return { ok: false, message: 'usuario Rpetido' }
+            return { ok: false, message: 'El usuario ya existe' }
         }
     }
 
@@ -27,13 +25,13 @@ export const useOptionLocalStorage = ({ key = '', defaultData = null }) => {
         if (!userFlag) {
             return {
                 ok: false,
-                message: 'Upps, Asegurese que estar registrado'
+                message: 'Upps, Asegurese de estar registrado'
             }
         }
         if (user.password !== userFlag.password) {
             return {
                 ok: false,
-                message: 'Upps, Asegurese que estar registrado'
+                message: 'Upps, Asegurese de estar registrado'
             }
         }
         return {

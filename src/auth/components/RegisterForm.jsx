@@ -3,6 +3,8 @@ import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { Link } from 'react-router-dom'
 import { useOptionLocalStorage } from '../../hooks/useOptionLocalStorage'
+import { TYPE_ALERTS } from '../../helpers/typeAlerts'
+import { myAlert } from '../../helpers/swalStyle'
 
 export const RegisterForm = ({ title }) => {
     const { add } = useOptionLocalStorage({ key: 'users', defaultData: [] })
@@ -14,10 +16,24 @@ export const RegisterForm = ({ title }) => {
                 initialValues={{
                     username: '',
                     password: '',
-                    confirm: ''
+                    confirm: '',
+                    description: ''
                 }}
-                onSubmit = {({ username, password }) => {
-                    add({ username, password })
+                onSubmit = { async ({ username, password, description }, helpers) => {
+                    const resp = await new Promise((resolve) => {
+                        resolve(add({ username, password, description }))
+                    })
+                    console.log(resp)
+                    if (!resp.ok) {
+                        myAlert('¡¡ Hubo un Problema !!', resp.message, TYPE_ALERTS.ERROR)
+                    } else {
+                        myAlert(' ¡¡ EXITO !!', 'El usuario se registro con exito', TYPE_ALERTS.SUCCESS)
+                    }
+                    helpers.resetForm({
+                        username: '',
+                        password: '',
+                        confirm: ''
+                    })
                 }}
                 validationSchema = {
                     Yup.object().shape({
@@ -32,6 +48,7 @@ export const RegisterForm = ({ title }) => {
                             .oneOf([Yup.ref('password'), null], 'Los password no coinciden')
                     })
                 }
+                // onReset={handleReset}
             >
                 {
                     formik => (
