@@ -136,7 +136,6 @@ export const LoginForm = ({ title }) => {
 LoginForm.defaultProps = {
     title: 'Formulario Login'
 }
-
 LoginForm.propTypes = {
     title: PropTypes.node.isRequired
 }

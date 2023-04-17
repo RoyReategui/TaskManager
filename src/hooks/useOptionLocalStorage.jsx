@@ -10,7 +10,8 @@ export const useOptionLocalStorage = ({ key = '', defaultData = null }) => {
             setvalue(newValue)
             return { ok: true }
         } else {
-            const flag = data.find(ele => ele.username.trim().toUpperCase() === newItem.username.trim().toUpperCase())
+            const flag = data.find(ele => ele.username.trim().toUpperCase() === newItem.username.trim().toUpperCase() ||
+            ele.uid === newItem.uid)
             if (!flag) {
                 newValue = [...data, newValue]
                 setvalue(newValue)

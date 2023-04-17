@@ -3,8 +3,7 @@ import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { Link } from 'react-router-dom'
 import { useOptionLocalStorage } from '../../hooks/useOptionLocalStorage'
-import { TYPE_ALERTS } from '../../helpers/typeAlerts'
-import { myAlert } from '../../helpers/swalStyle'
+import { TYPE_ALERTS, myAlert, generaId } from '../../helpers'
 
 export const RegisterForm = ({ title }) => {
     const { add } = useOptionLocalStorage({ key: 'users', defaultData: [] })
@@ -21,7 +20,7 @@ export const RegisterForm = ({ title }) => {
                 }}
                 onSubmit = { async ({ username, password, description }, helpers) => {
                     const resp = await new Promise((resolve) => {
-                        resolve(add({ username, password, description }))
+                        resolve(add({ uid: generaId('user'), username, password, description }))
                     })
                     console.log(resp)
                     if (!resp.ok) {
