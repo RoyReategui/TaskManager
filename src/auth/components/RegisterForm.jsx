@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { useDispatch, useSelector } from 'react-redux'
-import { registerUser } from '../../store/slices/registerUser/thunks'
-import { resetState } from '../../store/slices/registerUser/registerUserSlice'
+import { registerUser } from '../../store/slices/auth/thunks'
+import { resetState } from '../../store/slices/auth/authSlice'
 import * as Yup from 'yup'
 import { Link } from 'react-router-dom'
 // import { useOptionLocalStorage } from '../../hooks/useOptionLocalStorage'
@@ -12,7 +12,7 @@ import { useEffect } from 'react'
 export const RegisterForm = ({ title }) => {
     // const { add } = useOptionLocalStorage({ key: 'users', defaultData: [] })
 
-    const { status, message } = useSelector(state => state.registerUser)
+    const { status, message } = useSelector(state => state.auth)
 
     const dispatch = useDispatch()
 

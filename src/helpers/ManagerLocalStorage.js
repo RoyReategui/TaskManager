@@ -22,4 +22,28 @@ export class ManagerLocalStorage {
         localStorage.setItem(this.property, JSON.stringify(datalocalStorage))
         return { ok: true }
     }
+
+    async search (user) {
+        const datalocalStorage = JSON.parse(localStorage.getItem(this.property)) || null
+        const objectMessage = {
+            ok: false,
+            message: 'Upps, Asegurese de estar registrado'
+        }
+        if (datalocalStorage === null) return objectMessage
+
+        const userFlag = datalocalStorage.find(ele => ele.username.toUpperCase() === user.username.toUpperCase())
+        if (!userFlag) return objectMessage
+        if (user.password !== userFlag.password) return objectMessage
+
+        const { username, uid } = userFlag
+        return { ok: true, userFound: { username, uid } }
+    }
+
+    static updateItem (key, data) {
+        localStorage.setItem(key, JSON.stringify(data))
+    }
+
+    static getItem (key) {
+        return JSON.parse(localStorage.getItem(key)) || null
+    }
 }

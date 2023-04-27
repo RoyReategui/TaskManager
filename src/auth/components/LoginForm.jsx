@@ -1,26 +1,23 @@
 import PropTypes from 'prop-types'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import * as Yup from 'yup'
-import { loging } from '../../store/slices/auth/authSlice'
-import { useLocalStorage } from '../../hooks/useLocalStorage'
-import { useEffect, useState } from 'react'
+import { loginUser } from '../../store/slices/auth/thunks'
 import { Link } from 'react-router-dom'
-import { useOptionLocalStorage } from '../../hooks/useOptionLocalStorage'
+import { useEffect } from 'react'
+import { TYPE_ALERTS, myAlert } from '../../helpers'
+import { resetState } from '../../store/slices/auth/authSlice'
 
 export const LoginForm = ({ title }) => {
-    const [message, setmessage] = useState(null)
+    const { message } = useSelector(state => state.auth)
     const dispatch = useDispatch()
-    const { data, setvalue } = useLocalStorage({ key: 'user', defaultData: null })
-    const { search } = useOptionLocalStorage({ key: 'users' })
 
     useEffect(() => {
-        if (data) dispatch(loging(data))
-    }, [])
-
-    useEffect(() => {
-        console.log('Render Login Form')
-    })
+        if (message) {
+            myAlert('¡¡ Upss Tome en Cuenta !!', message, TYPE_ALERTS.ERROR)
+                .finally(ele => { dispatch(resetState()) })
+        }
+    }, [message])
 
     return (
         <div className='w-[80vw] sm:w-[50vw] md:w-[40vw] lg:w-[30vw] rounded-md space-y-6 p-5 py-6 md:p-7 lg:p-8 lg:py-8 bg-white flex flex-col items-center shadow-md'>
@@ -31,17 +28,7 @@ export const LoginForm = ({ title }) => {
                     password: ''
                 }}
                 onSubmit = { async (values, actions) => {
-                    const rs = await new Promise((resolve) => {
-                        const res = search(values)
-                        if (!res.ok) {
-                            return resolve(res)
-                        }
-                        setvalue(values)
-                        return resolve(res)
-                    })
-                    if (rs.ok) { return dispatch(loging(values)) }
-
-                    setmessage(rs.message)
+                    dispatch(loginUser(values))
                     actions.resetForm({
                         values: {
                             username: '',
@@ -128,7 +115,9 @@ export const LoginForm = ({ title }) => {
 
             </Formik>
 
-            <h3 className='text-md text-red-400 font-semibold text-right'>{ message }</h3>
+            {
+                message ? <p> ...Autenticando </p> : null
+            }
         </div>
     )
 }

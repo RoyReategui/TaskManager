@@ -1,18 +1,13 @@
 import { NavLink } from 'react-router-dom'
-import { logout } from '../../store/slices/auth/authSlice'
-import { useDispatch } from 'react-redux'
-import { useLocalStorage } from '../../hooks/useLocalStorage'
+import { logoutUser } from '../../store/slices/auth/thunks'
+import { useDispatch, useSelector } from 'react-redux'
 
 export const Navbar = () => {
     const dispatch = useDispatch()
-    const { setvalue } = useLocalStorage({ key: 'user' })
+    const { username } = useSelector(state => state.auth)
 
     const onLogout = async () => {
-        await new Promise((resolve) => {
-            setvalue(null)
-            resolve()
-        })
-        dispatch(logout())
+        dispatch(logoutUser())
     }
 
     return (
@@ -30,7 +25,7 @@ export const Navbar = () => {
             </ul>
             <div className='flex items-center gap-x-2 text-indigo-800 text-xl'>
                 <div>
-                    Roy
+                    { username }
                 </div>
                 <button
                     className='bg-red-700 text-red-100 rounded-md py-2 px-3 hover:bg-red-600'
