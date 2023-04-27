@@ -1,16 +1,45 @@
 import PropTypes from 'prop-types'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
+import { useDispatch, useSelector } from 'react-redux'
+import { registerUser } from '../../store/slices/registerUser/thunks'
+import { resetState } from '../../store/slices/registerUser/registerUserSlice'
 import * as Yup from 'yup'
 import { Link } from 'react-router-dom'
-import { useOptionLocalStorage } from '../../hooks/useOptionLocalStorage'
+// import { useOptionLocalStorage } from '../../hooks/useOptionLocalStorage'
 import { TYPE_ALERTS, myAlert, generaId } from '../../helpers'
+import { useEffect } from 'react'
 
 export const RegisterForm = ({ title }) => {
-    const { add } = useOptionLocalStorage({ key: 'users', defaultData: [] })
+    // const { add } = useOptionLocalStorage({ key: 'users', defaultData: [] })
+
+    const { status, message } = useSelector(state => state.registerUser)
+
+    const dispatch = useDispatch()
+
+    const onRegisterUser = (user) => {
+        user.uid = generaId('user')
+        dispatch(registerUser(user))
+    }
+
+    useEffect(() => {
+        if (message) {
+            let title = ''
+            let typeAlert = TYPE_ALERTS.SUCCESS
+            if (message.includes('[ok]')) {
+                title = '!!EXITO!!'
+            } else {
+                title = '¡¡ Hubo un problema !! '
+                typeAlert = TYPE_ALERTS.ERROR
+            }
+            myAlert(title, message, typeAlert)
+                .finally(ele => { dispatch(resetState()) })
+        }
+    }, [message])
 
     return (
         <div className='w-[80vw] sm:w-[50vw] md:w-[40vw] lg:w-[30vw] rounded-md space-y-6 p-5 py-6 md:p-7 lg:p-8 lg:py-8 bg-white flex flex-col items-center shadow-md'>
             <h2 className='font-semibold text-xl lg:text-2xl text-purple-800 '> { title } </h2>
+
             <Formik
                 initialValues={{
                     username: '',
@@ -19,15 +48,16 @@ export const RegisterForm = ({ title }) => {
                     description: ''
                 }}
                 onSubmit = { async ({ username, password, description }, helpers) => {
-                    const resp = await new Promise((resolve) => {
-                        resolve(add({ uid: generaId('user'), username, password, description }))
-                    })
-                    console.log(resp)
-                    if (!resp.ok) {
-                        myAlert('¡¡ Hubo un Problema !!', resp.message, TYPE_ALERTS.ERROR)
-                    } else {
-                        myAlert(' ¡¡ EXITO !!', 'El usuario se registro con exito', TYPE_ALERTS.SUCCESS)
-                    }
+                    onRegisterUser({ username, password, description })
+                    // const resp = await new Promise((resolve) => {
+                    //     resolve(add({ uid: generaId('user'), username, password, description }))
+                    // })
+                    // console.log(resp)
+                    // if (!resp.ok) {
+                    //     myAlert('¡¡ Hubo un Problema !!', resp.message, TYPE_ALERTS.ERROR)
+                    // } else {
+                    //     myAlert(' ¡¡ EXITO !!', 'El usuario se registro con exito', TYPE_ALERTS.SUCCESS)
+                    // }
                     helpers.resetForm({
                         username: '',
                         password: '',
@@ -129,8 +159,9 @@ export const RegisterForm = ({ title }) => {
                             </Link>
                             <button
                                 type='submit'
+                                // disabled = { registerUser }
                                 className='border rounded-md transition hover:duration-150 hover:scale-105 bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-700 hover:to-purple-500 text-purple-100 py-2 text-lg mt-6 font-bold'
-                            > Registrarse </button>
+                            > { status === 'checking' ? 'Registreando' : 'Registrarse' } </button>
                         </Form>
                     )
                 }
