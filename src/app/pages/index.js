@@ -1,3 +1,2 @@
-export * from './HistoriaPage'
-export * from './JavaScriptPage'
-export * from './HistoriaPage'
+export * from './ManagerTask'
+export * from './User'

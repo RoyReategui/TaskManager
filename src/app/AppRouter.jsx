@@ -1,18 +1,17 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { HistoriaPage, JavaScriptPage } from './pages'
-import { NoticiasPage } from './pages/NoticiasPage'
+import { User } from './pages/User'
 import { Navbar } from './ui/Navbar'
+import { ManagerTask } from './pages/ManagerTask'
 
 export const AppRouter = () => {
     return (
         <div className='bg-indigo-50'>
-            <div className='container  w-screen min-h-screen'>
+            <div className='w-screen min-h-screen'>
                 <Navbar />
                 <Routes>
-                    <Route path='/javascript' element={ <JavaScriptPage /> } />
-                    <Route path='/noticias' element={ <NoticiasPage /> } />
-                    <Route path='/historia' element={ <HistoriaPage /> } />
-                    <Route path='/*' element={ <Navigate to='/javascript' /> } />
+                    <Route path='/managerTask' element={ <ManagerTask /> } />
+                    <Route path='/user' element={ <User /> } />
+                    <Route path='/*' element={ <Navigate to='/managerTask' /> } />
                 </Routes>
 
             </div>

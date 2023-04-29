@@ -1,5 +1,5 @@
 
-export const JavaScriptPage = () => {
+export const ManagerTask = () => {
     return (
         <div>JavaScriptPage</div>
     )
